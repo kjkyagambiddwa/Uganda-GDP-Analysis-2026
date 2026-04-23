@@ -8,6 +8,7 @@ output:
     toc_float: true
     theme: default
     code_folding: show
+  github_document: default
 ---
 
 ```{r setup, include=FALSE}
