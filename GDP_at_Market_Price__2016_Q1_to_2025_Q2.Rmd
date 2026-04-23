@@ -148,7 +148,7 @@ cat("- **Note b:** No revisions in series because benchmarks and input data not 
 cat("- **Note f:** *'Original (Unadjusted) data are useful in their own right. They show the actual economic events that have occurred and therefore Seasonally adjusted data should not replace the unadjusted data.'*\n")
 cat("- **Note h:** *'In terms of interpretation, original series consider year on year similar quarter changes due to seasonal effects while adjusted series consider quarter to quarter changes.'*\n")
 
-cat("\n**Conclusion:** Your use of original current price GDP from the March 14th UBOS release follows the bureau's own recommendations for policy-oriented short-term forecasting.\n")
+cat("\n**Conclusion:** The use of original current price GDP from the March 14th UBOS release follows the bureau's own recommendations for policy-oriented short-term forecasting.\n")
 ```
 
 ### 2.3 Raw Data Verification Table
