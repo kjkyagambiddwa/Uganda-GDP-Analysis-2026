@@ -249,7 +249,7 @@ Table 1: UBOS Guidance Justifying Original Current Price GDP (March
     ## - **Note h:** *'In terms of interpretation, original series consider year on year similar quarter changes due to seasonal effects while adjusted series consider quarter to quarter changes.'*
 
     ## 
-    ## **Conclusion:** Your use of original current price GDP from the March 14th UBOS release follows the bureau's own recommendations for policy-oriented short-term forecasting.
+    ## **Conclusion:** The use of original current price GDP from the March 14th UBOS release follows the bureau's own recommendations for policy-oriented short-term forecasting.
 
 ### 2.3 Raw Data Verification Table
 
