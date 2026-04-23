@@ -24,8 +24,7 @@ Kyagambiddwa J Kelly
     Q1)](#41-chow-test-for-known-breakpoint-2020-q1)
   - [4.2 Exact Breakpoint
     Identification](#42-exact-breakpoint-identification)
-  - [4.3 The “Great Acceleration”: Pre vs Post-Break
-    Growth](#43-the-great-acceleration-pre-vs-post-break-growth)
+  - [4.3 Pre vs Post-Break Growth](#43-pre-vs-post-break-growth)
 - [5. Validation and Robustness
   Checks](#5-validation-and-robustness-checks)
   - [5.1 Post-Break Sub-sample
@@ -52,7 +51,6 @@ Kyagambiddwa J Kelly
   Notes](#appendix-b-ubos-march-14th-2026-release---complete-technical-notes)
 - [Appendix C: UBOS Use of Data Matrix (March 14th, 2026
   Release)](#appendix-c-ubos-use-of-data-matrix-march-14th-2026-release)
-- [Appendix D: Session Information](#appendix-d-session-information)
 
 ## Abstract
 
@@ -147,7 +145,6 @@ estimates (October 2025 release)
 **Total Observations:** 38 quarters
 
 ``` r
-# Load necessary libraries
 if (!require("tseries")) install.packages("tseries")
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("forecast")) install.packages("forecast")
@@ -166,64 +163,17 @@ library(knitr)
 library(kableExtra)
 library(gridExtra)
 
-# Load and Prepare the Dataset
 data <- read.csv("GDP_2016_Q1_to_2025_Q2.csv")
 data$Quarter_Num <- as.numeric(gsub("Q", "", data$Quarter))
 data <- data[order(data$Year, data$Quarter_Num), ]
 gdp_ts <- ts(data$GDP_Market_Price, start = c(2016, 1), frequency = 4)
-
-cat("=== DATA LOADING SUMMARY ===\n")
 ```
-
-    ## === DATA LOADING SUMMARY ===
-
-``` r
-cat(sprintf("Source: UBOS March 14th, 2026 Quarterly GDP Update\n"))
-```
-
-    ## Source: UBOS March 14th, 2026 Quarterly GDP Update
-
-``` r
-cat(sprintf("Total observations: %d quarters\n", nrow(data)))
-```
-
-    ## Total observations: 38 quarters
-
-``` r
-cat(sprintf("Time period: %d Q1 to %d Q2\n", min(data$Year), max(data$Year)))
-```
-
-    ## Time period: 2016 Q1 to 2025 Q2
-
-``` r
-cat(sprintf("GDP range: %.1f to %.1f billion UGX\n", 
-    min(data$GDP_Market_Price), max(data$GDP_Market_Price)))
-```
-
-    ## GDP range: 25568.5 to 62875.3 billion UGX
-
-``` r
-cat(sprintf("Mean GDP: %.1f billion UGX\n", mean(data$GDP_Market_Price)))
-```
-
-    ## Mean GDP: 40723.9 billion UGX
-
-``` r
-cat(sprintf("Standard deviation: %.1f billion UGX\n", sd(data$GDP_Market_Price)))
-```
-
-    ## Standard deviation: 10442.2 billion UGX
 
 ### 2.2 UBOS Official Guidance on Data Usage (March 14th, 2026 Release)
 
 According to the UBOS documentation accompanying the March 14th, 2026
 constant prices dataset, the choice of data type depends on the
 analytical objective:
-
-    ## 
-    ## === UBOS OFFICIAL GUIDANCE ON DATA USAGE ===
-
-    ## Source: UBOS March 14th, 2026 Release - Constant Prices Dataset 'Use of Data' worksheet
 
 | Use_Case | Recommended_Data | Your_Application |
 |:---|:---|:---|
@@ -237,19 +187,20 @@ analytical objective:
 Table 1: UBOS Guidance Justifying Original Current Price GDP (March
 14th, 2026 Release)
 
-    ## 
-    ## **Key UBOS Notes from the March 14th, 2026 Release:**
+**Key UBOS Notes from the March 14th, 2026 Release:** - **Note a:**
+Original estimates benchmarked to 2024/25 Annual GDP estimates (October
+release 2025) using Denton method - **Note b:** No revisions in series
+because benchmarks and input data not revised over the period - **Note
+f:** *‘Original (Unadjusted) data are useful in their own right. They
+show the actual economic events that have occurred and therefore
+Seasonally adjusted data should not replace the unadjusted data.’* -
+**Note h:** *‘In terms of interpretation, original series consider year
+on year similar quarter changes due to seasonal effects while adjusted
+series consider quarter to quarter changes.’*
 
-    ## - **Note a:** Original estimates benchmarked to 2024/25 Annual GDP estimates (October release 2025) using Denton method
-
-    ## - **Note b:** No revisions in series because benchmarks and input data not revised over the period
-
-    ## - **Note f:** *'Original (Unadjusted) data are useful in their own right. They show the actual economic events that have occurred and therefore Seasonally adjusted data should not replace the unadjusted data.'*
-
-    ## - **Note h:** *'In terms of interpretation, original series consider year on year similar quarter changes due to seasonal effects while adjusted series consider quarter to quarter changes.'*
-
-    ## 
-    ## **Conclusion:** The use of original current price GDP from the March 14th UBOS release follows the bureau's own recommendations for policy-oriented short-term forecasting.
+**Conclusion:** The use of original current price GDP from the March
+14th UBOS release follows the bureau’s own recommendations for
+policy-oriented short-term forecasting.
 
 ### 2.3 Raw Data Verification Table
 
@@ -308,43 +259,6 @@ billion UGX.
 ### 2.4 Descriptive Statistics
 
 ``` r
-cat("\n=== DESCRIPTIVE STATISTICS ===\n")
-```
-
-    ## 
-    ## === DESCRIPTIVE STATISTICS ===
-
-``` r
-cat(sprintf("Data Source: UBOS March 14th, 2026 Quarterly GDP Update\n"))
-```
-
-    ## Data Source: UBOS March 14th, 2026 Quarterly GDP Update
-
-``` r
-cat("Units: Billions of Ugandan Shillings (UGX)\n")
-```
-
-    ## Units: Billions of Ugandan Shillings (UGX)
-
-``` r
-cat("Price Basis: Current Market Prices (Nominal)\n")
-```
-
-    ## Price Basis: Current Market Prices (Nominal)
-
-``` r
-cat("Data Type: Original (Unadjusted) per UBOS classification\n")
-```
-
-    ## Data Type: Original (Unadjusted) per UBOS classification
-
-``` r
-cat("Frequency: Quarterly\n\n")
-```
-
-    ## Frequency: Quarterly
-
-``` r
 stats_table <- data.frame(
   Statistic = c("Minimum GDP", "Maximum GDP", "Mean GDP", "Median GDP",
                 "Standard Deviation", "Coefficient of Variation", 
@@ -383,7 +297,6 @@ Table 3: Descriptive Statistics - Uganda Nominal GDP (UBOS March 14th,
 2026 Release)
 
 ``` r
-# Time series plot with units clearly labeled
 autoplot(gdp_ts) +
   geom_line(color = "darkgreen", size = 1.2) +
   geom_point(color = "blue", size = 2) +
@@ -430,19 +343,10 @@ variable
 ### 3.1 Information Criteria Comparison
 
 ``` r
-# Define the Three Models
 model_111 <- Arima(gdp_ts, order = c(1,1,1), seasonal = list(order = c(0,1,0), period = 4))
 model_010 <- Arima(gdp_ts, order = c(0,1,0), seasonal = list(order = c(0,1,0), period = 4))
 model_110 <- Arima(gdp_ts, order = c(1,1,0), seasonal = list(order = c(0,1,0), period = 4))
 
-# Comprehensive Model Comparison Table
-cat("\n=== SECTION 1: Information Criteria & Fit Statistics ===\n")
-```
-
-    ## 
-    ## === SECTION 1: Information Criteria & Fit Statistics ===
-
-``` r
 comparison_results <- data.frame(
   Model = c("(1,1,1)(0,1,0)4", "(0,1,0)(0,1,0)4", "(1,1,0)(0,1,0)4"),
   LogLik = c(round(logLik(model_111), 2), round(logLik(model_010), 2), round(logLik(model_110), 2)),
@@ -472,20 +376,6 @@ has the lowest residual variance (Sigma2 = 2,930,226).
 ### 3.2 Likelihood Ratio Tests
 
 ``` r
-cat("\n=== SECTION 2: Likelihood Ratio Tests ===\n")
-```
-
-    ## 
-    ## === SECTION 2: Likelihood Ratio Tests ===
-
-``` r
-cat("\nTesting if AR(1) is better than the Baseline (0,1,0):\n")
-```
-
-    ## 
-    ## Testing if AR(1) is better than the Baseline (0,1,0):
-
-``` r
 lrt_ar <- lrtest(model_010, model_110)
 print(lrt_ar)
 ```
@@ -501,13 +391,6 @@ print(lrt_ar)
     ## 2   2 -290.14  1 2.9945    0.08355 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-cat("\nTesting if adding MA(1) to the AR(1) model (1,1,1) is better than (1,1,0):\n")
-```
-
-    ## 
-    ## Testing if adding MA(1) to the AR(1) model (1,1,1) is better than (1,1,0):
 
 ``` r
 lrt_ma <- lrtest(model_110, model_111)
@@ -531,13 +414,6 @@ significantly improves model fit (p = 0.052, marginally significant at
 model.
 
 ### 3.3 Coefficient Significance
-
-``` r
-cat("\n=== SECTION 3: Coefficient Significance ===\n")
-```
-
-    ## 
-    ## === SECTION 3: Coefficient Significance ===
 
 ``` r
 get_sig <- function(model, name) {
@@ -576,13 +452,6 @@ insignificant (p = 0.445).
 ### 3.4 Model Diagnostics
 
 ``` r
-cat("\n=== SECTION 4: Model Diagnostics ===\n")
-```
-
-    ## 
-    ## === SECTION 4: Model Diagnostics ===
-
-``` r
 checkresiduals(model_110, main="Diagnostics: Selected Model (1,1,0) (Billions UGX) - UBOS March 14th Release")
 ```
 
@@ -618,25 +487,9 @@ The model is adequate for forecasting.
 ### 4.1 Chow Test for Known Breakpoint (2020 Q1)
 
 ``` r
-cat("\n=== SECTION 5: Structural Break Analysis ===\n")
-```
-
-    ## 
-    ## === SECTION 5: Structural Break Analysis ===
-
-``` r
 time_index <- 1:length(gdp_ts)
 
-# Chow Test at 2020 Q1 (index 17)
 chow_test <- sctest(gdp_ts ~ time_index, type = "Chow", point = 17)
-
-cat("\n**Chow Test for Structural Change at 2020 Q1:**\n")
-```
-
-    ## 
-    ## **Chow Test for Structural Change at 2020 Q1:**
-
-``` r
 print(chow_test)
 ```
 
@@ -645,14 +498,6 @@ print(chow_test)
     ## 
     ## data:  gdp_ts ~ time_index
     ## F = 11.993, p-value = 0.0001145
-
-``` r
-# Bai-Perron optimal breakpoint test
-cat("\n**Identifying optimal break points based on data volatility...**\n")
-```
-
-    ## 
-    ## **Identifying optimal break points based on data volatility...**
 
 ``` r
 bp_gdp <- breakpoints(gdp_ts ~ time_index)
@@ -690,7 +535,6 @@ summary(bp_gdp)
     ## BIC 7.275e+02 7.178e+02 7.267e+02 7.347e+02 7.439e+02 7.544e+02 7.661e+02
 
 ``` r
-# Visualize the break
 plot(gdp_ts, main="Figure 3: Uganda GDP with Structural Break Identification (UBOS March 14th Release)", 
      lwd=2, ylab="GDP (Billions UGX)", xlab="Year")
 lines(bp_gdp, col="red", lwd=2)
@@ -710,43 +554,28 @@ Figure 3: GDP Series with Structural Break Identification (UBOS March
 </div>
 
 **Key Finding:** The Chow Test confirms a significant structural break
-(F-statistic = 18.56, p \< 0.001) at 2020 Q1, indicating that the
+(F-statistic = 11.993, p \< 0.001) at 2020 Q1, indicating that the
 pandemic period fundamentally altered Uganda’s nominal GDP trajectory
 according to the March 14th UBOS data.
 
 ### 4.2 Exact Breakpoint Identification
 
 ``` r
-cat("\n=== SECTION 6: Exact Breakpoint Identification ===\n")
-```
-
-    ## 
-    ## === SECTION 6: Exact Breakpoint Identification ===
-
-``` r
 opt_break_date <- breakdates(bp_gdp)
 break_ci <- confint(bp_gdp)
 
-cat(sprintf("\n**The mathematically optimal break point is detected at: %.2f**\n", opt_break_date))
+cat(sprintf("Optimal break point: %.2f\n", opt_break_date))
 ```
 
-    ## 
-    ## **The mathematically optimal break point is detected at: 2019.75**
+    ## Optimal break point: 2019.75
 
 ``` r
 break_year <- floor(opt_break_date)
 break_qtr <- (opt_break_date - break_year) * 4 + 1
-cat(sprintf("**This corresponds to: %d Q%d**\n", break_year, round(break_qtr)))
+cat(sprintf("Corresponds to: %d Q%d\n", break_year, round(break_qtr)))
 ```
 
-    ## **This corresponds to: 2019 Q4**
-
-``` r
-cat("\n**95% Confidence Interval for the Break Date:**\n")
-```
-
-    ## 
-    ## **95% Confidence Interval for the Break Date:**
+    ## Corresponds to: 2019 Q4
 
 ``` r
 print(break_ci)
@@ -768,7 +597,6 @@ print(break_ci)
     ## 1 2018(1) 2019(4)     2020(1)
 
 ``` r
-# Visualize confidence interval
 plot(gdp_ts, main="Figure 4: Uganda GDP - Structural Break with 95% Confidence Interval (UBOS March 14th Release)", 
      lwd=2, ylab="GDP (Billions UGX)", xlab="Year")
 lines(bp_gdp, col="red", lwd=2)
@@ -789,19 +617,10 @@ Figure 4: Structural Break with 95% Confidence Interval (UBOS March
 </div>
 
 **Critical Finding:** The Bai-Perron test identifies 2019 Q4 as the
-optimal breakpoint (CI: 2019 Q2 - 2020 Q2), suggesting the underlying
-regime shift occurred *before* the pandemic’s onset in Uganda. This
-aligns with UBOS Note f’s emphasis on original data showing actual
-events.
+optimal breakpoint (CI: 2018 Q1 - 2020 Q1), suggesting the underlying
+regime shift occurred before the pandemic’s onset in Uganda.
 
-### 4.3 The “Great Acceleration”: Pre vs Post-Break Growth
-
-``` r
-cat("\n=== SECTION 7: Growth Rate Analysis (Pre vs Post 2019 Q4) ===\n")
-```
-
-    ## 
-    ## === SECTION 7: Growth Rate Analysis (Pre vs Post 2019 Q4) ===
+### 4.3 Pre vs Post-Break Growth
 
 ``` r
 reg_data <- data.frame(
@@ -809,47 +628,42 @@ reg_data <- data.frame(
   Time = 1:length(gdp_ts)
 )
 
-break_idx <- 16  # 2019 Q4 (based on Bai-Perron result)
+break_idx <- 16
 
 data_pre  <- reg_data[1:break_idx, ]
 data_post <- reg_data[(break_idx + 1):nrow(reg_data), ]
 
-# Fit linear models for each regime
 model_pre  <- lm(GDP ~ Time, data = data_pre)
 model_post <- lm(GDP ~ Time, data = data_post)
 
-# Extract slopes (quarterly growth rates)
 slope_pre  <- coef(model_pre)["Time"]
 slope_post <- coef(model_post)["Time"]
 
-cat(sprintf("\n**Average Quarterly Growth (Pre-2019 Q4): %.2f billion UGX**\n", slope_pre))
+cat(sprintf("Average Quarterly Growth (Pre-2019 Q4): %.2f billion UGX\n", slope_pre))
 ```
 
-    ## 
-    ## **Average Quarterly Growth (Pre-2019 Q4): 729.58 billion UGX**
+    ## Average Quarterly Growth (Pre-2019 Q4): 729.58 billion UGX
 
 ``` r
-cat(sprintf("**Average Quarterly Growth (Post-2019 Q4): %.2f billion UGX**\n", slope_post))
+cat(sprintf("Average Quarterly Growth (Post-2019 Q4): %.2f billion UGX\n", slope_post))
 ```
 
-    ## **Average Quarterly Growth (Post-2019 Q4): 1257.56 billion UGX**
+    ## Average Quarterly Growth (Post-2019 Q4): 1257.56 billion UGX
 
 ``` r
 growth_change <- ((slope_post - slope_pre) / slope_pre) * 100
-cat(sprintf("\n**Change in Nominal Growth Momentum: %.2f%%**\n", growth_change))
+cat(sprintf("Change in Nominal Growth Momentum: %.2f%%\n", growth_change))
 ```
 
-    ## 
-    ## **Change in Nominal Growth Momentum: 72.37%**
+    ## Change in Nominal Growth Momentum: 72.37%
 
 ``` r
-cat(sprintf("**Absolute acceleration: %.2f billion UGX per quarter**\n", slope_post - slope_pre))
+cat(sprintf("Absolute acceleration: %.2f billion UGX per quarter\n", slope_post - slope_pre))
 ```
 
-    ## **Absolute acceleration: 527.98 billion UGX per quarter**
+    ## Absolute acceleration: 527.98 billion UGX per quarter
 
 ``` r
-# Visualize the regime shift
 plot(gdp_ts, main="Figure 5: Uganda GDP - Piecewise Growth Regime Shift (Nominal Terms) - UBOS March 14th Release", 
      lwd=2, ylab="GDP (Billions UGX)", xlab="Year")
 abline(v = 2019.75, col="red", lty=2, lwd=2)
@@ -861,9 +675,7 @@ lines(time_pre, fitted(model_pre), col="blue", lwd=3)
 lines(time_post, fitted(model_post), col="darkgreen", lwd=3)
 
 legend("topleft", 
-       legend=c("Pre-Break Trend (729.6 per quarter)", 
-                "Post-Break Trend (1,257.6 per quarter)", 
-                "Break Point (2019 Q4)"), 
+       legend=c("Pre-Break Trend", "Post-Break Trend", "Break Point (2019 Q4)"), 
        col=c("blue", "darkgreen", "red"), lty=c(1,1,2), lwd=c(3,3,2), bty="n")
 ```
 
@@ -879,11 +691,8 @@ Data)
 </div>
 
 **Critical Discovery:** Uganda’s quarterly nominal growth momentum
-increased by **72.37%** after the 2019 Q4 structural break according to
-the March 14th UBOS data. This represents a nominal acceleration of
-528.0 billion UGX per quarter. Following UBOS guidance, this is the
-actual economic event that occurred, as shown by the original unadjusted
-series.
+increased by 72.37% after the 2019 Q4 structural break. This represents
+a nominal acceleration of 528.0 billion UGX per quarter.
 
 ------------------------------------------------------------------------
 
@@ -892,23 +701,9 @@ series.
 ### 5.1 Post-Break Sub-sample Modeling
 
 ``` r
-cat("\n=== SECTION 8: SARIMA on Post-Break Data (2020 Q1 - 2025 Q2) ===\n")
-```
-
-    ## 
-    ## === SECTION 8: SARIMA on Post-Break Data (2020 Q1 - 2025 Q2) ===
-
-``` r
 gdp_post_ts <- window(gdp_ts, start = c(2020, 1))
 model_post_regime <- Arima(gdp_post_ts, order = c(1,1,0), seasonal = list(order = c(0,1,0), period = 4))
 
-cat("\n**Post-Break Model Significance:**\n")
-```
-
-    ## 
-    ## **Post-Break Model Significance:**
-
-``` r
 z_post <- model_post_regime$coef / sqrt(diag(model_post_regime$var.coef))
 p_post <- (1 - pnorm(abs(z_post))) * 2
 post_coef <- cbind(Estimate = round(model_post_regime$coef, 4), 
@@ -919,13 +714,6 @@ print(post_coef)
 
     ##     Estimate Z_score P_value
     ## ar1  -0.1385  -0.475  0.6346
-
-``` r
-cat("\n**Model Fit Statistics:**\n")
-```
-
-    ## 
-    ## **Model Fit Statistics:**
 
 ``` r
 cat(sprintf("Log-Likelihood: %.2f\n", logLik(model_post_regime)))
@@ -970,43 +758,20 @@ Data)
 
 **Important Finding:** The AR(1) coefficient becomes insignificant (p =
 0.634) in the post-break sub-sample, suggesting that the “memory” of the
-economy (autoregressive persistence) is less stable in the post-pandemic
-period. The Ljung-Box test (p = 0.149) confirms the model remains
-adequate.
+economy is less stable in the post-pandemic period. The Ljung-Box test
+(p = 0.149) confirms the model remains adequate.
 
 ### 5.2 ARIMAX with Structural Dummy
 
 ``` r
-cat("\n=== SECTION 9: ARIMAX with Structural Dummy Variable ===\n")
-```
-
-    ## 
-    ## === SECTION 9: ARIMAX with Structural Dummy Variable ===
-
-``` r
-# Create dummy variable (0 for pre-break, 1 for post-break)
 dummy_regime <- rep(0, length(gdp_ts))
-dummy_regime[17:length(gdp_ts)] <- 1  # Index 17 = 2020 Q1
+dummy_regime[17:length(gdp_ts)] <- 1
 
-# Fit ARIMAX model
 model_arimax <- Arima(gdp_ts, 
                       order = c(1,1,0), 
                       seasonal = list(order = c(0,1,0), period = 4),
                       xreg = dummy_regime)
 
-cat("\n**ARIMAX Model Summary:**\n")
-```
-
-    ## 
-    ## **ARIMAX Model Summary:**
-
-``` r
-cat("Coefficient for 'xreg' represents the permanent structural shift (billions UGX):\n")
-```
-
-    ## Coefficient for 'xreg' represents the permanent structural shift (billions UGX):
-
-``` r
 print(summary(model_arimax))
 ```
 
@@ -1026,12 +791,11 @@ print(summary(model_arimax))
     ## Training set 130.1753 1482.204 1115.05 0.2051582 2.765125 0.2867696 -0.1086447
 
 ``` r
-cat("\n**Interpretation:** The dummy coefficient of", round(coef(model_arimax)["xreg"], 2), 
+cat("The dummy coefficient of", round(coef(model_arimax)["xreg"], 2), 
     "billion UGX represents the permanent baseline level shift after accounting for AR dynamics.\n")
 ```
 
-    ## 
-    ## **Interpretation:** The dummy coefficient of 73.63 billion UGX represents the permanent baseline level shift after accounting for AR dynamics.
+    ## The dummy coefficient of 73.63 billion UGX represents the permanent baseline level shift after accounting for AR dynamics.
 
 ``` r
 checkresiduals(model_arimax, main="Figure 7: ARIMAX (with Structural Dummy) Diagnostics - UBOS March 14th Release")
@@ -1055,44 +819,21 @@ Figure 7: ARIMAX Model Residual Diagnostics (UBOS March 14th, 2026 Data)
     ## 
     ## Model df: 1.   Total lags used: 8
 
-**Finding:** The ARIMAX model identifies a **73.63 billion UGX permanent
-level shift** in nominal GDP baseline after the structural break. The
-dummy coefficient is statistically significant (p = 0.047).
+**Finding:** The ARIMAX model identifies a 73.63 billion UGX permanent
+level shift in nominal GDP baseline after the structural break. The
+dummy coefficient is not statistically significant (p \> 0.05).
 
 ### 5.3 Model Performance Comparison
 
 ``` r
-cat("\n=== SECTION 10: Final Model Comparison Summary ===\n")
-```
-
-    ## 
-    ## === SECTION 10: Final Model Comparison Summary ===
-
-``` r
 performance_summary <- data.frame(
-  Metric = c("Log-Likelihood", "AIC", "BIC", "Sigma^2 (Residual Variance)", 
-             "Ljung-Box p-value", "AR(1) p-value"),
-  
-  Global_SARIMA = c(round(as.numeric(logLik(model_110)), 2), 
-                    round(AIC(model_110), 2), 
-                    round(BIC(model_110), 2), 
-                    round(model_110$sigma2, 0),
-                    0.196,
-                    0.070),
-                    
-  Post_Break_Only = c(round(as.numeric(logLik(model_post_regime)), 2), 
-                      round(AIC(model_post_regime), 2), 
-                      round(BIC(model_post_regime), 2), 
-                      round(model_post_regime$sigma2, 0),
-                      0.149,
-                      0.634),
-                      
-  ARIMAX_Dummy = c(round(as.numeric(logLik(model_arimax)), 2), 
-                   round(AIC(model_arimax), 2), 
-                   round(BIC(model_arimax), 2), 
-                   round(model_arimax$sigma2, 0),
-                   0.204,
-                   0.051)
+  Metric = c("Log-Likelihood", "AIC", "BIC", "Sigma^2", "Ljung-Box p-value", "AR(1) p-value"),
+  Global_SARIMA = c(round(logLik(model_110), 2), round(AIC(model_110), 2), 
+                    round(BIC(model_110), 2), round(model_110$sigma2, 0), 0.196, 0.070),
+  Post_Break_Only = c(round(logLik(model_post_regime), 2), round(AIC(model_post_regime), 2), 
+                      round(BIC(model_post_regime), 2), round(model_post_regime$sigma2, 0), 0.149, 0.634),
+  ARIMAX_Dummy = c(round(logLik(model_arimax), 2), round(AIC(model_arimax), 2), 
+                   round(BIC(model_arimax), 2), round(model_arimax$sigma2, 0), 0.204, 0.288)
 )
 
 kable(performance_summary, 
@@ -1100,20 +841,19 @@ kable(performance_summary,
       format = "markdown", align = "lccc")
 ```
 
-| Metric                      | Global_SARIMA | Post_Break_Only | ARIMAX_Dummy |
-|:----------------------------|:-------------:|:---------------:|:------------:|
-| Log-Likelihood              |   -290.140    |    -150.160     |   -290.140   |
-| AIC                         |    584.280    |     304.320     |   586.280    |
-| BIC                         |    587.270    |     305.980     |   590.770    |
-| Sigma^2 (Residual Variance) |  2608833.000  |   2921227.000   | 2693010.000  |
-| Ljung-Box p-value           |     0.196     |      0.149      |    0.204     |
-| AR(1) p-value               |     0.070     |      0.634      |    0.051     |
+| Metric            | Global_SARIMA | Post_Break_Only | ARIMAX_Dummy |
+|:------------------|:-------------:|:---------------:|:------------:|
+| Log-Likelihood    |   -290.140    |    -150.160     |   -290.140   |
+| AIC               |    584.280    |     304.320     |   586.280    |
+| BIC               |    587.270    |     305.980     |   590.770    |
+| Sigma^2           |  2608833.000  |   2921227.000   | 2693010.000  |
+| Ljung-Box p-value |     0.196     |      0.149      |    0.204     |
+| AR(1) p-value     |     0.070     |      0.634      |    0.288     |
 
 Table 5: Model Performance Comparison - Global vs. Regime-Specific (UBOS
 March 14th, 2026 Data)
 
 ``` r
-# Visual comparison of residuals
 par(mfrow=c(3,1), mar=c(4,4,2,1))
 plot(residuals(model_110), main="Figure 8a: Global SARIMA Residuals (UBOS March 14th Release)", 
      col="black", ylab="Residuals (Billion UGX)")
@@ -1147,16 +887,8 @@ despite the structural break detection.
 ### 6.1 Global SARIMA Forecast
 
 ``` r
-cat("\n=== SECTION 11: Forecast Values and Confidence Intervals ===\n")
-```
-
-    ## 
-    ## === SECTION 11: Forecast Values and Confidence Intervals ===
-
-``` r
 final_forecast <- forecast(model_110, h = 8)
 
-# Create forecast table
 forecast_table <- data.frame(
   Quarter = c("2025 Q3", "2025 Q4", "2026 Q1", "2026 Q2", "2026 Q3", "2026 Q4", "2027 Q1", "2027 Q2"),
   Point_Forecast = round(as.numeric(final_forecast$mean), 1),
@@ -1186,7 +918,6 @@ Table 6: 8-Quarter Forecast - Uganda Nominal GDP (Billions UGX) Based on
 UBOS March 14th, 2026 Data
 
 ``` r
-# Plot forecast
 plot(final_forecast, main="Figure 9: Uganda GDP Forecast - SARIMA(1,1,0)(0,1,0)4 (UBOS March 14th Release)", 
      col="darkgreen", ylab="GDP (Billions UGX)", xlab="Year")
 ```
@@ -1205,18 +936,9 @@ March 14th, 2026 Data
 ### 6.2 Forecast Comparison: Global SARIMA vs. ARIMAX
 
 ``` r
-cat("\n=== SECTION 12: Comparing Global vs. ARIMAX Forecasts ===\n")
-```
-
-    ## 
-    ## === SECTION 12: Comparing Global vs. ARIMAX Forecasts ===
-
-``` r
-# Generate ARIMAX forecast
-future_dummy <- rep(1, 8)  # All future quarters assumed to be in post-break regime
+future_dummy <- rep(1, 8)
 forecast_arimax <- forecast(model_arimax, xreg = future_dummy, h = 8)
 
-# Comparison table
 comparison_forecasts <- data.frame(
   Quarter = c("2025 Q3", "2025 Q4", "2026 Q1", "2026 Q2", "2026 Q3", "2026 Q4", "2027 Q1", "2027 Q2"),
   Global_SARIMA = round(as.numeric(final_forecast$mean), 1),
@@ -1244,7 +966,6 @@ Table 7: Forecast Comparison - Global SARIMA vs. ARIMAX (UBOS March
 14th, 2026 Data)
 
 ``` r
-# Plot ARIMAX forecast
 plot(forecast_arimax, main="Figure 10: Uganda GDP - ARIMAX Forecast (Adjusted for Structural Break) - UBOS March 14th Release", 
      col="blue", ylab="GDP (Billions UGX)", xlab="Year")
 ```
@@ -1272,26 +993,18 @@ our projections for fiscal planning based on the March 14th UBOS data.
 
 ### 7.1 Key Findings Summary
 
-    ## 
-    ## === SUMMARY OF KEY FINDINGS (NOMINAL TERMS) ===
+**SUMMARY OF KEY FINDINGS (NOMINAL TERMS)**
 
-    ## Based on UBOS March 14th, 2026 Quarterly GDP Release
+Based on UBOS March 14th, 2026 Quarterly GDP Release
 
-    ## =====================================================================
-
-    ## 1. **Optimal Model:** SARIMA(1,1,0)(0,1,0)[4] (AIC = 584.27)
-
-    ## 2. **Structural Break:** 2019 Q4 (Chow test p < 0.001, 95% CI: 2019 Q2 - 2020 Q2)
-
-    ## 3. **Nominal Growth Acceleration:** 72.37% increase in quarterly momentum
-
-    ## 4. **Absolute Change:** From 729.6 to 1,257.6 billion UGX per quarter
-
-    ## 5. **Permanent Level Shift:** 73.6 billion UGX (ARIMAX estimate)
-
-    ## 6. **Forecast (2027 Q2):** 69,600 - 77,500 billion UGX (95% CI)
-
-    ## =====================================================================
+1.  **Optimal Model:** SARIMA(1,1,0)(0,1,0)\[4\] (AIC = 584.27)
+2.  **Structural Break:** 2019 Q4 (Chow test p \< 0.001, 95% CI: 2019
+    Q2 - 2020 Q2)
+3.  **Nominal Growth Acceleration:** 72.37% increase in quarterly
+    momentum
+4.  **Absolute Change:** From 729.6 to 1,257.6 billion UGX per quarter
+5.  **Permanent Level Shift:** 73.6 billion UGX (ARIMAX estimate)
+6.  **Forecast (2027 Q2):** 69,600 - 77,500 billion UGX (95% CI)
 
 ### 7.2 Policy Recommendations with Nominal Caveats
 
@@ -1317,7 +1030,7 @@ budgeting: - **Scenario A (Real Break):** Growth momentum persists →
 increase capital expenditure - **Scenario B (Inflation Break):** Nominal
 illusion → maintain fiscal discipline
 
-**Recommendation 4: Forecast Uncertainty Management**
+**Recommendation 3: Forecast Uncertainty Management**
 
 The widening confidence intervals (Figure 9) reflect increasing
 uncertainty in the March 14th UBOS projections.
@@ -1444,11 +1157,6 @@ combination of both*
 Based on UBOS official guidance from the March 14th, 2026 release, this
 section addresses potential reviewer concerns:
 
-    ## 
-    ## === RESPONSE TO POTENTIAL REVIEWER CONCERNS ===
-
-    ## Based on UBOS March 14th, 2026 Quarterly GDP Release Documentation
-
 | Reviewer_Concern | Your_Response | UBOS_Reference |
 |:---|:---|:---|
 | Why not use constant prices to remove inflation? | UBOS Note f: Original data shows actual events. Constant prices remove price effects relevant for nominal fiscal planning. Future research will decompose real vs. inflation. | Note f |
@@ -1458,38 +1166,49 @@ section addresses potential reviewer concerns:
 | Is nominal GDP appropriate for policy? | UBOS Use Case \#1: For Policy Formulations, UBOS recommends original unadjusted series. Government budgets are in current shillings. | Use Case \#1 |
 | Why use March 14th data specifically? | March 14th release is the most recent quarterly update from UBOS (April 2026 access date), incorporating 2024/25 annual benchmarks via Denton method. | Note a, Release date |
 
-Appendix Table B1: Methodological Defense Against Potential Critiques
+Appendix Table A1: Methodological Defense Against Potential Critiques
 (UBOS March 14th, 2026 Release)
 
 ------------------------------------------------------------------------
 
 ## Appendix B: UBOS March 14th, 2026 Release - Complete Technical Notes
 
-    ## 
-    ## === UBOS MARCH 14TH, 2026 RELEASE COMPLETE TECHNICAL NOTES ===
+**UBOS MARCH 14TH, 2026 RELEASE COMPLETE TECHNICAL NOTES**
 
-    ## =================================================================
+**Note a:** Original (Unadjusted) estimates have been benchmarked to the
+2024/25 Annual GDP estimates (October release 2025) due to quarterly
+differences in source data for selected economic activities. The Denton
+benchmarking method revises quarterly estimates whenever new annual
+benchmarks are produced.
 
-    ## **Note a:** Original (Unadjusted) estimates have been benchmarked to the 2024/25 Annual GDP estimates (October release 2025) due to quarterly differences in source data for selected economic activities. The Denton benchmarking method revises quarterly estimates whenever new annual benchmarks are produced.
+**Note b:** Therefore, there were no revisions in series because the
+benchmarks and input data have not been revised over the period.
+Quarterly input data includes Government Finance statistics (GFS),
+Customs data, Sales data, Electricity, water and Central bank data among
+others.
 
-    ## **Note b:** Therefore, there were no revisions in series because the benchmarks and input data have not been revised over the period. Quarterly input data includes Government Finance statistics (GFS), Customs data, Sales data, Electricity, water and Central bank data among others.
+**Note c:** Seasonally adjusted data are subject to revisions as future
+data become available, even when the original data are not revised.
 
-    ## **Note c:** Seasonally adjusted data are subject to revisions as future data become available, even when the original data are not revised.
+**Note d:** Seasonally adjusted and Trend-cycle estimates represent an
+analytical elaboration of the data designed to show the underlying
+movements that may be hidden by the seasonal variations.
 
-    ## **Note d:** Seasonally adjusted and Trend-cycle estimates represent an analytical elaboration of the data designed to show the underlying movements that may be hidden by the seasonal variations.
+**Note e:** Seasonally adjusted data is the sum of the Trend-cycle
+component and the Irregular component. When the Irregular component is
+strong, the Seasonally adjusted series may not present a smooth pattern.
 
-    ## **Note e:** Seasonally adjusted data is the sum of the Trend-cycle component and the Irregular component. When the Irregular component is strong, the Seasonally adjusted series may not present a smooth pattern.
+**Note f:** Original (Unadjusted) data are useful in their own right.
+They show the actual economic events that have occurred and therefore
+Seasonally adjusted data should not replace the unadjusted data.
 
-    ## **Note f:** Original (Unadjusted) data are useful in their own right. They show the actual economic events that have occurred and therefore Seasonally adjusted data should not replace the unadjusted data.
-
-    ## **Note h:** In terms of interpretation, original series consider year on year similar quarter changes due to seasonal effects while adjusted series consider quarter to quarter changes.
+**Note h:** In terms of interpretation, original series consider year on
+year similar quarter changes due to seasonal effects while adjusted
+series consider quarter to quarter changes.
 
 ------------------------------------------------------------------------
 
 ## Appendix C: UBOS Use of Data Matrix (March 14th, 2026 Release)
-
-    ## 
-    ## === UBOS USE OF DATA MATRIX (March 14th, 2026 Release) ===
 
 | Main_Use | Recommended_Data | Used_in_This_Study |
 |:---|:---|:---|
@@ -1501,60 +1220,8 @@ Appendix Table B1: Methodological Defense Against Potential Critiques
 | Short-term and medium term forecasting | Original unadjusted series and all its components | ✓ Yes |
 | Long-term forecasting | Trend-cycle component | N/A |
 
-Appendix Table D1: UBOS Official Guidance on Data Usage (March 14th,
+Appendix Table C1: UBOS Official Guidance on Data Usage (March 14th,
 2026 Release)
-
-------------------------------------------------------------------------
-
-## Appendix D: Session Information
-
-``` r
-sessionInfo()
-```
-
-    ## R version 4.5.1 (2025-06-13 ucrt)
-    ## Platform: x86_64-w64-mingw32/x64
-    ## Running under: Windows 11 x64 (build 26200)
-    ## 
-    ## Matrix products: default
-    ##   LAPACK version 3.12.1
-    ## 
-    ## locale:
-    ## [1] LC_COLLATE=English_United States.utf8 
-    ## [2] LC_CTYPE=English_United States.utf8   
-    ## [3] LC_MONETARY=English_United States.utf8
-    ## [4] LC_NUMERIC=C                          
-    ## [5] LC_TIME=English_United States.utf8    
-    ## 
-    ## time zone: Africa/Nairobi
-    ## tzcode source: internal
-    ## 
-    ## attached base packages:
-    ## [1] stats     graphics  grDevices utils     datasets  methods   base     
-    ## 
-    ## other attached packages:
-    ##  [1] gridExtra_2.3     kableExtra_1.4.0  knitr_1.51        strucchange_1.5-4
-    ##  [5] sandwich_3.1-1    lmtest_0.9-40     zoo_1.8-15        forecast_9.0.1   
-    ##  [9] ggplot2_4.0.2     tseries_0.10-61  
-    ## 
-    ## loaded via a namespace (and not attached):
-    ##  [1] generics_0.1.4     xml2_1.5.2         stringi_1.8.7      lattice_0.22-7    
-    ##  [5] digest_0.6.39      magrittr_2.0.4     evaluate_1.0.5     grid_4.5.1        
-    ##  [9] RColorBrewer_1.1-3 fastmap_1.2.0      viridisLite_0.4.3  scales_1.4.0      
-    ## [13] textshaping_1.0.4  cli_3.6.5          rlang_1.1.7        withr_3.0.2       
-    ## [17] yaml_2.3.12        tools_4.5.1        parallel_4.5.1     dplyr_1.2.0       
-    ## [21] colorspace_2.1-2   curl_7.0.0         vctrs_0.7.1        R6_2.6.1          
-    ## [25] lifecycle_1.0.5    stringr_1.6.0      pkgconfig_2.0.3    urca_1.3-4        
-    ## [29] pillar_1.11.1      gtable_0.3.6       glue_1.8.0         quantmod_0.4.28   
-    ## [33] Rcpp_1.1.1         systemfonts_1.3.2  xfun_0.56          tibble_3.3.1      
-    ## [37] tidyselect_1.2.1   rstudioapi_0.18.0  farver_2.1.2       htmltools_0.5.9   
-    ## [41] nlme_3.1-168       labeling_0.4.3     rmarkdown_2.30     xts_0.14.2        
-    ## [45] svglite_2.2.2      timeDate_4052.112  fracdiff_1.5-3     compiler_4.5.1    
-    ## [49] S7_0.2.1           quadprog_1.5-8     TTR_0.24.4
-
-------------------------------------------------------------------------
-
-**End of Report**
 
 **Prepared by:** Kyagambiddwa J Kelly  
 **Institution:** Makerere University, SSP  
