@@ -45,16 +45,14 @@ Kyagambiddwa J Kelly
     Research](#73-limitations-and-future-research)
 - [8. Conclusion](#8-conclusion)
 - [References](#references)
-- [Appendix A: Data Extraction Verification (UBOS March 14th, 2026
-  Release)](#appendix-a-data-extraction-verification-ubos-march-14th-2026-release)
-- [Appendix B: Methodological Defense - Current vs. Constant Prices
+- [Appendix A: Methodological Defense - Current vs. Constant Prices
   (UBOS March 14th, 2026
-  Release)](#appendix-b-methodological-defense---current-vs-constant-prices-ubos-march-14th-2026-release)
-- [Appendix C: UBOS March 14th, 2026 Release - Complete Technical
-  Notes](#appendix-c-ubos-march-14th-2026-release---complete-technical-notes)
-- [Appendix D: UBOS Use of Data Matrix (March 14th, 2026
-  Release)](#appendix-d-ubos-use-of-data-matrix-march-14th-2026-release)
-- [Appendix E: Session Information](#appendix-e-session-information)
+  Release)](#appendix-a-methodological-defense---current-vs-constant-prices-ubos-march-14th-2026-release)
+- [Appendix B: UBOS March 14th, 2026 Release - Complete Technical
+  Notes](#appendix-b-ubos-march-14th-2026-release---complete-technical-notes)
+- [Appendix C: UBOS Use of Data Matrix (March 14th, 2026
+  Release)](#appendix-c-ubos-use-of-data-matrix-march-14th-2026-release)
+- [Appendix D: Session Information](#appendix-d-session-information)
 
 ## Abstract
 
@@ -121,7 +119,7 @@ guidance: - For **policy formulations** and **determining what actually
 happened**: Use original unadjusted series - For **short-term and
 medium-term forecasting**: Use original unadjusted series
 
-Since our objectives are (1) detecting the actual structural break
+Since our objectives are: (1) detecting the actual structural break
 timing, (2) generating short-term (8-quarter) forecasts for fiscal
 planning, and (3) informing policy, we use original (unadjusted) current
 market price GDP from the March 14th UBOS release. Constant price
@@ -1297,30 +1295,19 @@ our projections for fiscal planning based on the March 14th UBOS data.
 
 ### 7.2 Policy Recommendations with Nominal Caveats
 
-**Recommendation 1: Seasonal Smoothing Interventions**
-
-The necessity of seasonal differencing ($D=1$) confirms Uganda’s nominal
-GDP remains tied to quarterly cycles in the March 14th UBOS data.
-
-**Action:** The Ministry of Finance should implement counter-cyclical
-liquidity facilities during traditional Q1/Q3 troughs. However, these
-should be calibrated using available real sector indicators (agriculture
-production, manufacturing PMI) to avoid over-reacting to seasonal price
-effects.
-
-**Recommendation 2: Inflation Decomposition Required**
+**Recommendation 1: Inflation Decomposition Required**
 
 The 72.37% nominal acceleration cannot guide policy without
 understanding the real vs. inflation components.
 
 **Action:** Before implementing any policy based on this analysis, UBOS
-and the Bank of Uganda should: - Provide the quarterly GDP deflator
-(2016 = 100 base year) - Replicate this analysis on constant-price GDP
-from the same March 14th release - If the break persists in real terms →
-implement expansionary policies - If the break is inflation-driven →
-consider monetary tightening
+and the Bank of Uganda should: - Adjust the results using the quarterly
+GDP deflator (2016 = 100 base year) - Replicate this analysis on
+constant-price GDP from the same March 14th release - If the break
+persists in real terms → implement expansionary policies - If the break
+is inflation-driven → consider monetary tightening
 
-**Recommendation 3: Scenario-Based Budgeting**
+**Recommendation 2: Scenario-Based Budgeting**
 
 The structural break evidence from the March 14th UBOS data suggests the
 economy operates under a “new normal” regime.
@@ -1335,7 +1322,7 @@ illusion → maintain fiscal discipline
 The widening confidence intervals (Figure 9) reflect increasing
 uncertainty in the March 14th UBOS projections.
 
-**Action:** The Ministry of Finance should maintain contingency reserves
+**Action:** The Ministry of Finance may maintain contingency reserves
 equivalent to 5-8% of projected quarterly GDP to absorb forecast errors.
 
 ### 7.3 Limitations and Future Research
@@ -1452,32 +1439,7 @@ combination of both*
 
 ------------------------------------------------------------------------
 
-## Appendix A: Data Extraction Verification (UBOS March 14th, 2026 Release)
-
-The following table confirms alignment between your CSV extraction and
-the original UBOS March 14th, 2026 source table:
-
-| Quarter | Your CSV (Billions UGX) | UBOS March 14th Table | Difference | Notes |
-|:--:|:--:|:--:|:--:|:--:|
-| 2023 Q3 | 44550.35 | 44550 | 0.3 | Matches |
-| 2023 Q4 | 48470.54 | 48471 | -0.5 | Rounding (0.5) |
-| 2024 Q1 | 49863.05 | 49863 | 0.1 | Matches |
-| 2024 Q2 | 50336.21 | 50336 | 0.2 | Matches |
-| 2024 Q3 | 50318.89 | 50319 | -0.1 | Rounding (0.1) |
-| 2024 Q4 | 52660.40 | 52660 | 0.4 | Matches |
-| 2025 Q1 | 59066.34 | 59066 | 0.3 | Matches |
-| 2025 Q2 | 62875.30 | 62875 | 0.3 | Matches |
-
-Appendix Table A1: CSV Extraction vs. UBOS March 14th, 2026 Source Table
-(Billions UGX)
-
-**Conclusion:** Your CSV extraction accurately reflects the UBOS March
-14th, 2026 source data. Minor rounding differences (\< 1 billion UGX)
-are within acceptable precision limits for this analysis.
-
-------------------------------------------------------------------------
-
-## Appendix B: Methodological Defense - Current vs. Constant Prices (UBOS March 14th, 2026 Release)
+## Appendix A: Methodological Defense - Current vs. Constant Prices (UBOS March 14th, 2026 Release)
 
 Based on UBOS official guidance from the March 14th, 2026 release, this
 section addresses potential reviewer concerns:
@@ -1501,7 +1463,7 @@ Appendix Table B1: Methodological Defense Against Potential Critiques
 
 ------------------------------------------------------------------------
 
-## Appendix C: UBOS March 14th, 2026 Release - Complete Technical Notes
+## Appendix B: UBOS March 14th, 2026 Release - Complete Technical Notes
 
     ## 
     ## === UBOS MARCH 14TH, 2026 RELEASE COMPLETE TECHNICAL NOTES ===
@@ -1524,7 +1486,7 @@ Appendix Table B1: Methodological Defense Against Potential Critiques
 
 ------------------------------------------------------------------------
 
-## Appendix D: UBOS Use of Data Matrix (March 14th, 2026 Release)
+## Appendix C: UBOS Use of Data Matrix (March 14th, 2026 Release)
 
     ## 
     ## === UBOS USE OF DATA MATRIX (March 14th, 2026 Release) ===
@@ -1544,7 +1506,7 @@ Appendix Table D1: UBOS Official Guidance on Data Usage (March 14th,
 
 ------------------------------------------------------------------------
 
-## Appendix E: Session Information
+## Appendix D: Session Information
 
 ``` r
 sessionInfo()
