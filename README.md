@@ -39,5 +39,5 @@ To see the full analysis with rendered charts and statistical tables, please ope
 ---
 
 ## About the Author
-**Kyagambiddwa J Kelly** *Aspiring Quantitative Economist & Data Scientist* Year 3 Finalist, Bachelor of Statistics  
+**Kyagambiddwa JKelly** *Aspiring Quantitative Economist & Data Scientist* Year 3 Finalist, Bachelor of Statistics  
 **Makerere University**
